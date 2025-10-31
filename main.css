@@ -1,0 +1,184 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: cursive;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* header ძირითადი */
+.header {
+  background-image: url('https://restaurant.stepprojects.ge/images/inner_banner.jpg');
+  background-size: 100% 100%;
+  width: 100%;
+  height: 42vh;
+  position: relative;
+}
+
+/* header-main – ფიქსირებული ზედა ზოლი */
+
+.header-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10vh;
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  transition: background-color 0.3s ease, border-bottom 0.3s ease;
+  z-index: 1000;
+
+}
+
+
+.header-main.scrolled {
+  background-color: rgba(0, 0, 0, 0.8) ;
+  border-bottom: 2px solid red;
+}
+
+
+.header-placeholder {
+  height: 10vh;
+}
+
+/* შიდა ელემენტები */
+.header-left {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.header-left p {
+  color: white;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* კალათის ღილაკი */
+.cart-btn {
+  padding: 0.7rem 1.2rem 0.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 125px;
+  gap: 5px;
+}
+
+
+.cart-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.cart-text {
+  color: white;
+  text-decoration: none;
+  background-color: #d33444;
+  min-width: 60px;
+  border-radius: 7px;
+  height: 30px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.bike-icon {
+  display: inline-block;
+  filter: brightness(0) invert(1);
+  transition: transform 0.6s ease-out;
+}
+
+.cart-btn:hover .bike-icon {
+  transform: translateX(15px);
+}
+
+
+.random{
+    height: 1000px;
+}
+
+.header-middle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(52vh - 10vh);
+  padding-top: 10vh;
+  text-align: center;
+}
+
+.header-middle h1 {
+  color: white;
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 2vw;
+  line-height: 1.4;
+  padding: 0 4vw;
+  text-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  animation: fadeInUp 1.2s ease;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 1200px) {
+  .header-middle h1 {
+    font-size: 2.8vw;
+    max-width: 700px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .header-middle {
+    height: 35vh;
+    padding-top: 9vh;
+  }
+
+  .header-middle h1 {
+    font-size: 3.8vw;
+    max-width: 500px;
+    padding: 0 6vw;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-middle {
+    height: 32vh;
+    padding-top: 10vh;
+    justify-content: center;
+  }
+
+  .header-middle h1 {
+    font-size: 5vw;
+    line-height: 1.3;
+    padding: 0 8vw;
+    font-weight: 500;
+    max-width: 350px;
+  }
+}
