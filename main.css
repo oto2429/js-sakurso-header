@@ -40,11 +40,14 @@ a {
   z-index: 1000;
 
 }
-
+.random{
+  height: 1000px;
+}
 
 .header-main.scrolled {
   background-color: rgba(0, 0, 0, 0.8) ;
-  border-bottom: 2px solid red;
+  border-bottom: 1px solid red;
+  box-shadow: rgba(228, 13, 13, 0.45) 0px 25px 20px -20px;
 }
 
 
@@ -52,13 +55,21 @@ a {
   height: 10vh;
 }
 
-/* შიდა ელემენტები */
+
 .header-left {
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  
 }
-
+.step{
+  font-size: 2.7rem;
+}
+.ordering{
+  font-size: 1.5rem;
+   padding-left: 4rem;
+   color: rgb(236, 226, 226);
+}
 .header-left p {
   color: white;
 }
@@ -106,10 +117,6 @@ a {
   transform: translateX(15px);
 }
 
-
-.random{
-    height: 1000px;
-}
 
 .header-middle {
   display: flex;
@@ -168,6 +175,18 @@ a {
 }
 
 @media (max-width: 480px) {
+  .header-main{
+    padding: 2.9rem 0rem;
+    justify-content: space-around;
+  }
+  .step{
+    font-size: 1.4rem;
+  }
+  .ordering{
+    font-size: 1rem;
+    padding-left: 30px;
+  }
+ 
   .header-middle {
     height: 32vh;
     padding-top: 10vh;
