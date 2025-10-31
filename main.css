@@ -98,7 +98,7 @@ a {
 .cart-text {
   color: white;
   text-decoration: none;
-  background-color: #d33444;
+  background-color: #ff021b;
   min-width: 60px;
   border-radius: 7px;
   height: 30px;
@@ -130,9 +130,9 @@ a {
 
 .header-middle h1 {
   color: white;
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: "Georgia", serif;;
   font-weight: 600;
-  font-size: 2vw;
+  font-size: 1.8vw;
   line-height: 1.4;
   padding: 0 4vw;
   text-shadow: 0 3px 8px rgba(0,0,0,0.3);
