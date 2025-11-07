@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Step Restaurant</title>
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* ===== HEADER STYLES (SAME AS OTHER PAGES) ===== */
+        .header {
+            background-image: url('https://restaurant.stepprojects.ge/images/inner_banner.jpg');
+            background-size: 100% 100%;
+            width: 100%;
+            height: 42vh;
+            position: relative;
+        }
+
+        .header-main {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10vh;
+            padding: 3.5rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 2px solid transparent;
+            transition: background-color 0.3s ease, border-bottom 0.3s ease;
+            z-index: 1000;
+        }
+
+        .header-main.scrolled {
+            background-color: rgba(0, 0, 0, 0.733);
+            border-bottom: 1px solid red;
+            box-shadow: rgba(228, 13, 13, 0.45) 0px 25px 20px -20px;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .step {
+            font-size: 2.7rem;
+            color: red;
+        }
+
+        .ordering {
+            font-size: 1.5rem;
+            padding-left: 4rem;
+            color: rgb(236, 226, 226);
+        }
+
+        .header-middle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: calc(52vh - 10vh);
+            padding-top: 10vh;
+            text-align: center;
+        }
+
+        .header-middle h1 {
+            color: white;
+            font-family: "Georgia", serif;
+            font-weight: 600;
+            font-size: 2.4vw;
+            line-height: 1.4;
+            padding: 0 4vw;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1.2s ease;
+            line-height: 1.7;
+            letter-spacing: 1.3;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-btn {
+            padding: 0.7rem 1.2rem 0.7rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .cart-btn:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        .header-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-btn {
+            background: #2ecc71 !important;
+            color: white !important;
+            border: 2px solid transparent !important;
+        }
+
+        .profile-btn:hover {
+            background: #27ae60 !important;
+            transform: translateY(-2px);
+        }
+
+        .cart-text {
+            color: white;
+            text-decoration: none;
+            background-color: #ff021b;
+            min-width: 60px;
+            border-radius: 7px;
+            height: 30px;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .bike-icon {
+            display: inline-block;
+            filter: brightness(0) invert(1);
+            transition: transform 0.6s ease-out;
+        }
+
+        .cart-btn:hover .bike-icon {
+            transform: translateX(15px);
+        }
+
+        /* ANIMATED X BURGER (MOBILE ONLY) */
+        .burger {
+            display: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        #menu-toggle { display: none; }
+
+        .toggle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bars {
+            width: 32px;
+            height: 4px;
+            background: white;
+            border-radius: 2px;
+            transition: 0.3s ease;
+        }
+
+        /* X Animation */
+        #menu-toggle:checked + .toggle #bar1 {
+            transform: rotate(45deg) translate(9px, 9px);
+        }
+        #menu-toggle:checked + .toggle #bar2 {
+            opacity: 0;
+        }
+        #menu-toggle:checked + .toggle #bar3 {
+            transform: rotate(-45deg) translate(9px, -9px);
+        }
+
+        /* ===== OVERLAY & MENU STYLES ===== */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .menu.open {
+            transform: translateX(0);
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .menu ul li {
+            margin: 15px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .menu.open ul li {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu.open ul li:nth-child(1) { transition-delay: 0.1s; }
+        .menu.open ul li:nth-child(2) { transition-delay: 0.2s; }
+        .menu.open ul li:nth-child(3) { transition-delay: 0.3s; }
+
+        .menu ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 500;
+            display: block;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu ul li a:hover {
+            color: #ff021b;
+            transform: scale(1.05);
+        }
+
+        .menu ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #ff021b;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .menu ul li a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* ===== PROFILE CONTENT STYLES ===== */
+        .profile-section {
+            padding: 120px 20px 50px;
+            display: flex;
+            justify-content: center;
+            background: #f6f7fb;
+            min-height: calc(100vh - 200px);
+            flex: 1;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h2 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-item label {
+            font-weight: 600;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .info-item span {
+            color: #333;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .profile-actions {
+            text-align: center;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1100px) {
+            .burger {
+                display: flex;
+                margin-left: auto;
+                margin-right: 20px;
+            }
+
+            .header-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                padding: 100px 15px 30px;
+            }
+
+            .profile-card {
+                padding: 25px;
+            }
+
+            .profile-header h2 {
+                font-size: 24px;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .info-item span {
+                text-align: left;
+            }
+
+            .header-middle {
+                height: 35vh;
+                padding-top: 10vh;
+            }
+
+            .header-middle h1 {
+                font-size: 4vw;
+                max-width: 500px;
+                line-height: 1.3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-main {
+                padding: 2.9rem 0rem;
+                justify-content: space-around;
+            }
+            
+            .header-left {
+                padding-left: 40px;
+            }
+
+            .step {
+                font-size: 1.4rem;
+            }
+
+            .ordering {
+                font-size: 1rem;
+                padding-left: 30px;
+            }
+
+            .header-middle {
+                height: 32vh;
+                padding-top: 10vh;
+                justify-content: center;
+            }
+
+            .header-middle h1 {
+                font-size: 6vw;
+                line-height: 1.3;
+                padding: 0 8vw;
+                font-weight: 500;
+                max-width: 350px;
+            }
+
+            .profile-section {
+                padding: 90px 10px 20px;
+            }
+
+            .profile-card {
+                padding: 20px;
+            }
+
+            .profile-header h2 {
+                font-size: 22px;
+            }
+
+            .info-item {
+                padding: 12px 0;
+            }
+
+            .info-item label, .info-item span {
+                font-size: 14px;
+            }
+
+            .logout-btn {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+        }
+
+        /* ===== FOOTER STYLES ===== */
+        .footer {
+            background-color: #221c1c;
+            color: #fff;
+            padding-top: 30px;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            flex: 1;
+            text-align: center;
+        }
+
+        .footer-logo-link {
+            text-decoration: none;
+            color: white;
+        }
+
+        .footer-logo-step {
+            font-size: 24px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .footer-logo-restaurant {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .footer-links {
+            flex: 1;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: red;
+        }
+
+        .footer-social {
+            flex: 1;
+            text-align: center;
+        }
+
+        .footer-social p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .social-icon {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: red;
+        }
+
+        .footer-social .social-icon img {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .footer-social .social-icon img:hover {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            border-top: 1px solid #444;
+            padding-top: 10px;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        .footer-bottom span {
+            color: red;
+            font-size: 16px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-logo,
+            .footer-links,
+            .footer-social {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-main">
+            <a href="main.html" class="header-left">
+                <p class="step">Step</p>
+                <p class="ordering">Ordering</p>
+            </a>
+
+            <!-- ANIMATED X BURGER (mobile only) -->
+            <label class="burger" for="menu-toggle">
+                <input type="checkbox" id="menu-toggle" />
+                <div class="toggle">
+                    <div class="bars" id="bar1"></div>
+                    <div class="bars" id="bar2"></div>
+                    <div class="bars" id="bar3"></div>
+                </div>
+            </label>
+
+            <div class="header-right">
+                <a href="basket.html" class="cart-btn">
+                    <span class="cart-text">Cart</span>
+                    <span class="bike-icon">
+                        <img src="imgs/delivery-man_1.png" alt="delivery">
+                    </span>
+                </a>
+                <a href="profile.html" class="header-btn profile-btn">Profile</a>
+            </div>
+        </div>
+
+        <div class="header-middle">
+            <h1>User Profile</h1>
+        </div>
+    </header>
+
+    <!-- SLIDE MENU -->
+    <div class="overlay" id="overlay"></div>
+    <div class="menu" id="menu">
+        <ul>
+            <li><a href="main.html">Home</a></li>
+            <li><a href="basket.html">Cart</a></li>
+            <li><a href="profile.html" id="mobileProfile">Profile</a></li>
+        </ul>
+    </div>
+
+    <!-- PROFILE CONTENT -->
+    <section class="profile-section">
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h2>Account Information</h2>
+                </div>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label>Full Name:</label>
+                        <span id="profileName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <span id="profileEmail">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Phone Number:</label>
+                        <span id="profilePhone">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Member Since:</label>
+                        <span id="profileJoinDate">Loading...</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button id="logoutBtnMain" class="logout-btn">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <a href="main.html" class="footer-logo-link">
+                    <p><span class="footer-logo-step">Step</span><br><span
+                            class="footer-logo-restaurant">Restaurant</span></p>
+                </a>
+            </div>
+            <div class="footer-links">
+                <a href="main.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 512 512">
+                        <path fill="#FFD43B" d="M169.7 .9c-22.8-1.6-41.9 14-47.5 34.7L110.4 80c.5 0 1.1 0 1.6 0c176.7 0 320 143.3 320 320c0 .5 0 1.1 0 1.6l44.4-11.8c20.8-5.5 36.3-24.7 34.7-47.5C498.5 159.5 352.5 13.5 169.7 .9zM399.8 410.2c.1-3.4 .2-6.8 .2-10.2c0-159.1-128.9-288-288-288c-3.4 0-6.8 .1-10.2 .2L.5 491.9c-1.5 5.5 .1 11.4 4.1 15.4s9.9 5.6 15.4 4.1L399.8 410.2zM176 208a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm64 128a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM96 384a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+                    </svg> Home
+                </a>
+            </div>
+            <div class="footer-social">
+                <p>Follow us:</p>
+                <a href="https://www.facebook.com/" target="_blank" class="social-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_(2019).svg" alt="Facebook" width="24" height="24">
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" class="social-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="24" height="24">
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Step Restaurant. All rights reserved. This Website is made by <span>Oto Kristesiashvili and Luka Bediashvili.</span>.</p>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!AuthService.isLoggedIn()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Access Denied',
+                    text: 'Please log in to view your profile.',
+                    confirmButtonText: 'Go to Login',
+                    confirmButtonColor: '#e74c3c'
+                }).then(() => {
+                    window.location.href = 'test.html';
+                });
+                return;
+            }
+
+            // Load user data
+            const user = AuthService.getCurrentUser();
+            if (user) {
+                document.getElementById('profileName').textContent = user.name || 'Not provided';
+                document.getElementById('profileEmail').textContent = user.email || 'Not provided';
+                document.getElementById('profilePhone').textContent = user.phone || 'Not provided';
+                document.getElementById('profileJoinDate').textContent = 
+                    new Date(user.createdAt || Date.now()).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                
+                // Update mobile menu
+                const mobileProfile = document.getElementById('mobileProfile');
+                if (mobileProfile) {
+                    mobileProfile.textContent = `Profile (${user.name.split(' ')[0]})`;
+                }
+            }
+
+            // Logout functionality
+            function logout() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will be logged out of your account.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, log out',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        AuthService.logout();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Logged Out',
+                            text: 'You have been successfully logged out.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#2ecc71'
+                        }).then(() => {
+                            window.location.href = 'main.html';
+                        });
+                    }
+                });
+            }
+
+            document.getElementById('logoutBtnMain').addEventListener('click', logout);
+
+            // Mobile menu functionality
+            const checkbox = document.getElementById('menu-toggle');
+            const menu = document.getElementById('menu');
+            const overlay = document.getElementById('overlay');
+
+            const openMenu = () => {
+                menu.classList.add('open');
+                overlay.classList.add('active');
+            };
+
+            const closeMenu = () => {
+                menu.classList.remove('open');
+                overlay.classList.remove('active');
+                checkbox.checked = false;
+            };
+
+            checkbox.addEventListener('change', () => {
+                checkbox.checked ? openMenu() : closeMenu();
+            });
+
+            overlay.addEventListener('click', closeMenu);
+
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+
+            // Header scroll effect - SAME AS OTHER PAGES
+            window.addEventListener("scroll", function() {
+                const header = document.querySelector(".header-main");
+                if (header) {
+                    if (window.scrollY > 0) {
+                        header.classList.add("scrolled");
+                    } else {
+                        header.classList.remove("scrolled");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

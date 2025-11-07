@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Payment Page</title>
+  <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* ===== BASE STYLES ===== */
+    html {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100vw;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      margin: 0;
+      padding: 0;
+      background: #f6f7fb;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background-image: url('https://restaurant.stepprojects.ge/images/inner_banner.jpg');
+      background-size: 100% 100%;
+      width: 100%;
+      height: 42vh;
+      position: relative;
+    }
+
+    /* ფიქსირებული ზედა ზოლი */
+    .header-main {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 10vh;
+      padding: 3.5rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-bottom: 2px solid transparent;
+      z-index: 1000;
+    }
+
+    .header-main.scrolled {
+      background-color: rgba(0, 0, 0, 0.8);
+      border-bottom: 1px solid red;
+      box-shadow: rgba(228, 13, 13, 0.45) 0px 25px 20px -20px;
+    }
+
+    .header-placeholder {
+      height: 10vh;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .step {
+      font-size: 2.7rem;
+    }
+
+    .ordering {
+      font-size: 1.5rem;
+      padding-left: 4rem;
+      color: white;
+    }
+
+    .header-left p {
+      color: white;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    /* კალათის ღილაკი */
+    .cart-btn {
+      padding: 0.7rem 1.2rem 0.7rem 1.5rem;
+      display: flex;
+      align-items: center;
+      width: 125px;
+      gap: 5px;
+    }
+
+    .cart-btn:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+
+    .cart-text {
+      color: white;
+      background-color: #ff021b;
+      min-width: 60px;
+      border-radius: 7px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bike-icon {
+      display: inline-block;
+      filter: brightness(0) invert(1);
+      transition: transform 0.6s ease-out;
+    }
+
+    .cart-btn:hover .bike-icon {
+      transform: translateX(15px);
+    }
+
+    .header-middle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: calc(52vh - 10vh);
+      padding-top: 10vh;
+      text-align: center;
+    }
+
+    .header-middle h1 {
+      color: white;
+      font-weight: 600;
+      font-size: 60px;
+      line-height: 1.4;
+      text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+    }
+
+    /* Header Buttons */
+    .header-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .login-btn {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .login-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .register-btn {
+      background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+      color: white;
+      border: 2px solid transparent;
+      box-shadow: 0 4px 15px rgba(255, 26, 26, 0.3);
+    }
+
+    .register-btn:hover {
+      background: linear-gradient(135deg, #ff3333, #e60000);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 26, 26, 0.4);
+    }
+
+    .header-right>*+* {
+      margin-left: 12px;
+    }
+
+    /* ===== CHECKOUT ===== */
+    .checkout-section {
+      padding: 100px 20px 80px;
+      display: flex;
+      justify-content: center;
+      background: #f6f7fb;
+      min-height: 80vh;
+    }
+
+    .checkout-box {
+      background: white;
+      padding: 30px 40px 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .order-summary {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      border: 1px solid #e9ecef;
+    }
+
+    .order-summary h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      border-bottom: 2px solid #e74c3c;
+      padding-bottom: 8px;
+    }
+
+    .order-items {
+      margin-bottom: 15px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      flex: 2;
+      color: #555;
+    }
+
+    .item-quantity {
+      flex: 1;
+      text-align: center;
+      color: #777;
+    }
+
+    .item-price {
+      flex: 1;
+      text-align: right;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 2px solid #dee2e6;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .total-label {
+      color: #333;
+    }
+
+    .total-amount {
+      color: #e74c3c;
+      font-size: 1.4rem;
+    }
+
+    .checkout-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .checkout-form label {
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+      font-size: 1.2rem;
+    }
+
+    .checkout-form input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      background: #fdfdfd;
+      transition: all 0.2s ease;
+    }
+
+    .checkout-form input:focus {
+      outline: none;
+      border-color: red;
+      box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.15);
+      background: white;
+    }
+
+    .row {
+      display: flex;
+      gap: 18px;
+    }
+
+    .half {
+      flex: 1;
+    }
+
+    .pay-btn {
+      margin-top: 20px;
+      padding: 16px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pay-btn:hover {
+      background: #e60000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 0, 0, 0.25);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background-color: #221c1c;
+      color: #fff;
+      padding: 40px 20px;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+
+    .footer-logo {
+      flex: 1;
+      text-align: center;
+    }
+
+    .footer-logo-link {
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .footer-logo-step {
+      font-size: 24px;
+      font-weight: bold;
+      color: red;
+    }
+
+    .footer-logo-restaurant {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .footer-links {
+      flex: 1;
+      text-align: center;
+    }
+
+    .footer-links a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: red;
+    }
+
+    .footer-social {
+      flex: 1;
+      text-align: center;
+    }
+
+    .footer-social p {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .social-icon {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 20px;
+      transition: color 0.3s ease;
+    }
+
+    .social-icon:hover {
+      color: red;
+    }
+
+    .footer-social {
+      flex: 1;
+      text-align: center;
+    }
+
+    .footer-social p {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      margin: 0;
+    }
+
+    .footer-social a {
+      text-decoration: none;
+    }
+
+    .footer-social .social-icon img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .footer-social .social-icon img:hover {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      border-top: 1px solid #444;
+      padding-top: 10px;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+    }
+
+    .footer-bottom span {
+      color: red;
+      font-size: 16px;
+    }
+
+    /* ===== BURGER MENU ===== */
+    .burger {
+      display: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #menu-toggle {
+      display: none;
+    }
+
+    .toggle {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bars {
+      width: 32px;
+      height: 4px;
+      background: white;
+      border-radius: 2px;
+      transition: 0.3s ease;
+    }
+
+    /* X Animation */
+    #menu-toggle:checked+.toggle #bar1 {
+      transform: rotate(45deg) translate(9px, 9px);
+    }
+
+    #menu-toggle:checked+.toggle #bar2 {
+      opacity: 0;
+    }
+
+    #menu-toggle:checked+.toggle #bar3 {
+      transform: rotate(-45deg) translate(9px, -9px);
+    }
+
+    /* ===== OVERLAY & MENU ===== */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a1a1a;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      padding: 20px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .menu.open {
+      transform: translateX(0);
+    }
+
+    .menu .close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      font-size: 36px;
+      color: white;
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      outline: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease 0.2s;
+    }
+
+    .menu.open .close {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .menu .close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .menu ul li {
+      margin: 15px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+
+    .menu.open ul li {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Add staggered animation for menu items */
+    .menu.open ul li:nth-child(1) {
+      transition-delay: 0.1s;
+    }
+
+    .menu.open ul li:nth-child(2) {
+      transition-delay: 0.2s;
+    }
+
+    .menu.open ul li:nth-child(3) {
+      transition-delay: 0.3s;
+    }
+
+    .menu.open ul li:nth-child(4) {
+      transition-delay: 0.4s;
+    }
+
+    .menu ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 500;
+      display: block;
+      padding: 15px 0;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu ul li a:hover {
+      color: #ff021b;
+      transform: scale(1.05);
+    }
+
+    .menu ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #ff021b;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+
+    .menu ul li a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .burger {
+        display: flex;
+        margin-left: auto;
+        margin-right: 20px;
+      }
+
+      .header-right {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-middle h1 {
+        font-size: 3.8vw;
+      }
+
+      .checkout-section {
+        padding: 80px 15px;
+      }
+
+      .row {
+        flex-direction: column;
+      }
+
+      .footer-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .footer-logo,
+      .footer-links,
+      .footer-social {
+        text-align: center;
+      }
+
+      .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .item-quantity,
+      .item-price {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      html,
+      body {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        position: relative;
+      }
+
+      body {
+        min-width: 100%;
+      }
+
+      .header-main {
+        padding: 1.5rem 1rem;
+      }
+
+      .step {
+        font-size: 2rem;
+      }
+
+      .ordering {
+        font-size: 1.2rem;
+        padding-left: 2rem;
+      }
+
+      .checkout-box {
+        width: 90% !important;
+        max-width: 90% !important;
+        padding: 20px 15px;
+        border-radius: 12px !important;
+      }
+
+      .checkout-form input {
+        padding: 12px;
+        font-size: 1rem;
+      }
+
+      .order-summary {
+        padding: 15px;
+      }
+
+      .order-summary h3 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-main">
+      <a href="main.html" class="header-left">
+        <p class="step">Step</p>
+        <p class="ordering">Ordering</p>
+      </a>
+
+      <!-- ANIMATED X BURGER (mobile only) -->
+      <label class="burger" for="menu-toggle">
+        <input type="checkbox" id="menu-toggle" />
+        <div class="toggle">
+          <div class="bars" id="bar1"></div>
+          <div class="bars" id="bar2"></div>
+          <div class="bars" id="bar3"></div>
+        </div>
+      </label>
+
+      <div class="header-right">
+        <a href="basket.html" class="cart-btn">
+          <span class="cart-text">Cart</span>
+          <span class="bike-icon">
+            <img src="imgs/delivery-man_1.png" alt="delivery">
+          </span>
+        </a>
+        <a href="login.html" class="header-btn login-btn">Login</a>
+        <a href="login.html" class="header-btn register-btn">Register</a>
+      </div>
+    </div>
+
+    <div class="header-middle">
+      <h1>Checkout</h1>
+    </div>
+  </header>
+
+  <div class="header-placeholder"></div>
+
+  <!-- SLIDE MENU -->
+  <div class="overlay" id="overlay"></div>
+  <div class="menu" id="menu">
+    <div class="close" id="close-menu">×</div>
+    <ul>
+      <li><a href="main.html">Home</a></li>
+      <li><a href="basket.html">Cart</a></li>
+      <!-- Dynamic links will be added by auth.js -->
+    </ul>
+  </div>
+
+  <!-- CHECKOUT -->
+  <section class="checkout-section">
+    <div class="checkout-box">
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="order-items" id="orderItems">
+          <!-- Order items will be dynamically inserted here -->
+        </div>
+        <div class="order-total">
+          <span class="total-label">Total Amount:</span>
+          <span class="total-amount" id="total-amount">0.00 ₾</span>
+        </div>
+      </div>
+
+      <form id="checkout-form" class="checkout-form" autocomplete="off">
+        <label for="card-number">Card number</label>
+        <input id="card-number" inputmode="numeric" placeholder="2456 1665 5155 5151" maxlength="19" required>
+
+        <div class="row">
+          <div class="half">
+            <label for="expiry">Expiry date</label>
+            <input id="expiry" placeholder="MM/YY" maxlength="5" required>
+          </div>
+          <div class="half">
+            <label for="cvc">CVC / CVV</label>
+            <input id="cvc" inputmode="numeric" placeholder="3 digits" maxlength="3" required>
+          </div>
+        </div>
+
+        <label for="owner">Cardholder name</label>
+        <input id="owner" placeholder="J. Smith" required>
+
+        <button id="pay-btn" class="pay-btn" type="submit">Pay Now</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-logo">
+        <a href="main.html" class="footer-logo-link">
+          <p><span class="footer-logo-step">Step</span><br><span class="footer-logo-restaurant">Restaurant</span></p>
+        </a>
+      </div>
+      <div class="footer-links">
+        <a href="main.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 512 512">
+            <path fill="#FFD43B"
+              d="M169.7 .9c-22.8-1.6-41.9 14-47.5 34.7L110.4 80c.5 0 1.1 0 1.6 0c176.7 0 320 143.3 320 320c0 .5 0 1.1 0 1.6l44.4-11.8c20.8-5.5 36.3-24.7 34.7-47.5C498.5 159.5 352.5 13.5 169.7 .9zM399.8 410.2c.1-3.4 .2-6.8 .2-10.2c0-159.1-128.9-288-288-288c-3.4 0-6.8 .1-10.2 .2L.5 491.9c-1.5 5.5 .1 11.4 4.1 15.4s9.9 5.6 15.4 4.1L399.8 410.2zM176 208a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm64 128a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM96 384a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
+          </svg> Home
+        </a>
+      </div>
+      <div class="footer-social">
+        <p>Follow us:</p>
+        <a href="https://www.facebook.com/" target="_blank" class="social-icon">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_(2019).svg" alt="Facebook"
+            width="24" height="24">
+        </a>
+        <a href="https://www.instagram.com/" target="_blank" class="social-icon">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="24"
+            height="24">
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Step Restaurant. All rights reserved. This Website is made by <span>Oto Kristesiashvili and Luka
+          Bediashvili</span>.</p>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    // API endpoints
+    const BASKET_API_GET = "https://restaurant.stepprojects.ge/api/Baskets/GetAll";
+
+    // HEADER scroll effect
+    window.addEventListener("scroll", function () {
+      const header = document.querySelector(".header-main");
+      if (header) {
+        header.classList.toggle("scrolled", window.scrollY > 0);
+      }
+    });
+
+    // Mobile Menu Controller
+    document.addEventListener("DOMContentLoaded", () => {
+      const checkbox = document.getElementById('menu-toggle');
+      const menu = document.getElementById('menu');
+      const overlay = document.getElementById('overlay');
+      const closeBtn = document.getElementById('close-menu');
+
+      const openMenu = () => {
+        menu.classList.add('open');
+        overlay.classList.add('active');
+      };
+
+      const closeMenu = () => {
+        menu.classList.remove('open');
+        overlay.classList.remove('active');
+        checkbox.checked = false;
+      };
+
+      // Open when burger clicked
+      checkbox.addEventListener('change', () => {
+        checkbox.checked ? openMenu() : closeMenu();
+      });
+
+      // Close with X button
+      closeBtn.addEventListener('click', closeMenu);
+
+      // Close when clicking overlay
+      overlay.addEventListener('click', closeMenu);
+
+      // Close when clicking a menu link
+      menu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+      });
+
+      // Load order data from basket
+      loadOrderData();
+
+      // Update navigation based on auth status
+      if (typeof AuthService !== 'undefined') {
+        AuthService.updateNavigation();
+      }
+    });
+
+    // Load order data from basket API
+    async function loadOrderData() {
+      try {
+        const response = await fetch(BASKET_API_GET);
+        const cartItems = await response.json();
+
+        const orderItemsContainer = document.getElementById('orderItems');
+        const totalAmountElement = document.getElementById('total-amount');
+
+        if (!cartItems || cartItems.length === 0) {
+          orderItemsContainer.innerHTML = '<div class="order-item"><span class="item-name">Your cart is empty</span></div>';
+          totalAmountElement.textContent = '0.00 ₾';
+          return;
+        }
+
+        let total = 0;
+        orderItemsContainer.innerHTML = '';
+
+        // Merge same products by product.id
+        const mergedItems = {};
+        cartItems.forEach(item => {
+          if (!item.product) return;
+          const id = item.product.id;
+          if (!mergedItems[id]) {
+            mergedItems[id] = { ...item };
+          } else {
+            mergedItems[id].quantity += item.quantity || 1;
+          }
+        });
+
+        const mergedArray = Object.values(mergedItems);
+
+        mergedArray.forEach(item => {
+          const product = item.product;
+          const quantity = item.quantity || 1;
+          const itemTotal = (product.price || 0) * quantity;
+          total += itemTotal;
+
+          const orderItem = document.createElement('div');
+          orderItem.className = 'order-item';
+          orderItem.innerHTML = `
+            <span class="item-name">${product.name || 'Unnamed Item'}</span>
+            <span class="item-quantity">Qty: ${quantity}</span>
+            <span class="item-price">${itemTotal.toFixed(2)} ₾</span>
+          `;
+          orderItemsContainer.appendChild(orderItem);
+        });
+
+        totalAmountElement.textContent = `${total.toFixed(2)} ₾`;
+
+      } catch (error) {
+        console.error("Error loading order data:", error);
+        document.getElementById('orderItems').innerHTML = '<div class="order-item"><span class="item-name">Error loading order data</span></div>';
+        document.getElementById('total-amount').textContent = '0.00 ₾';
+      }
+    }
+
+    // Payment form functionality
+    const cardInput = document.getElementById("card-number");
+    const expiryInput = document.getElementById("expiry");
+    const cvcInput = document.getElementById("cvc");
+    const ownerInput = document.getElementById("owner");
+    const form = document.getElementById("checkout-form");
+
+    // Only numbers
+    function onlyNumbers(text) {
+      let result = "";
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] >= "0" && text[i] <= "9") result += text[i];
+      }
+      return result;
+    }
+
+    // Card formatting
+    cardInput.addEventListener("input", function () {
+      let value = onlyNumbers(cardInput.value);
+      if (value.length > 16) value = value.substring(0, 16);
+      let formatted = "";
+      for (let i = 0; i < value.length; i++) {
+        formatted += value[i];
+        if ((i + 1) % 4 === 0 && i !== value.length - 1) formatted += " ";
+      }
+      cardInput.value = formatted;
+    });
+
+    // Expiry MM/YY
+    expiryInput.addEventListener("input", function () {
+      let value = onlyNumbers(expiryInput.value);
+      if (value.length > 4) value = value.substring(0, 4);
+      let formatted = "";
+      for (let i = 0; i < value.length; i++) {
+        formatted += value[i];
+        if (i === 1 && value.length > 2) formatted += "/";
+      }
+      expiryInput.value = formatted;
+    });
+
+    // CVC
+    cvcInput.addEventListener("input", function () {
+      let value = onlyNumbers(cvcInput.value);
+      if (value.length > 3) value = value.substring(0, 3);
+      cvcInput.value = value;
+    });
+
+    // trimSpaces
+    function trimSpaces(text) {
+      return text.trim();
+    }
+
+    // Validation functions
+    function validateCardNumber(card) {
+      const digitsOnly = onlyNumbers(card);
+      return digitsOnly.length === 16;
+    }
+
+    function validateExpiry(expiry) {
+      if (expiry.length !== 5 || expiry[2] !== "/") return false;
+
+      const parts = expiry.split("/");
+      const month = parseInt(parts[0]);
+      const year = parseInt(parts[1]);
+
+      if (month < 1 || month > 12) return false;
+
+      const currentYear = new Date().getFullYear() % 100;
+      const currentMonth = new Date().getMonth() + 1;
+
+      if (year < currentYear) return false;
+      if (year === currentYear && month < currentMonth) return false;
+
+      return true;
+    }
+
+    function validateCVC(cvc) {
+      return cvc.length === 3;
+    }
+
+    function validateOwner(owner) {
+      return owner.trim().length > 0;
+    }
+
+    // Form submission
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Check authentication
+      if (typeof AuthService !== 'undefined' && !AuthService.isLoggedIn()) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Authentication Required',
+          text: 'Please log in to complete your purchase.',
+          confirmButtonText: 'Go to Login',
+          confirmButtonColor: '#e74c3c'
+        }).then(() => {
+          window.location.href = 'login.html';
+        });
+        return;
+      }
+
+      let card = trimSpaces(cardInput.value);
+      let expiry = trimSpaces(expiryInput.value);
+      let cvc = trimSpaces(cvcInput.value);
+      let owner = trimSpaces(ownerInput.value);
+
+      if (!validateCardNumber(card)) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid card number!",
+          text: "Must be 16 digits",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
+      if (!validateExpiry(expiry)) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid expiry date!",
+          text: "Format must be MM/YY and date must not be expired",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
+      if (!validateCVC(cvc)) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid CVC!",
+          text: "Must be 3 digits",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
+      if (!validateOwner(owner)) {
+        Swal.fire({
+          icon: "error",
+          title: "Please enter cardholder name!",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
+      const totalAmount = document.getElementById('total-amount').textContent;
+
+      // Show loading
+      Swal.fire({
+        title: 'Processing payment...',
+        html: `Total: <strong>${totalAmount}</strong>`,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // Simulate payment processing
+      setTimeout(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Payment successful! ✅",
+          html: `Thank you, ${owner}!<br>Your payment of <strong>${totalAmount}</strong> has been processed.`,
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+        }).then(() => {
+          // Redirect to main page
+          window.location.href = "main.html";
+        });
+      }, 2000);
+    });
+  </script>
+</body>
+
+</html>

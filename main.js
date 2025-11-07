@@ -237,6 +237,92 @@
 
 
 
+
+// Add this at the beginning of your main.js file
+document.addEventListener('DOMContentLoaded', function() {
+    // Update navigation based on auth status
+    AuthService.updateNavigation();
+    
+    // Protect add to cart functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-btn')) {
+            if (!AuthService.isLoggedIn()) {
+                e.preventDefault();
+                AuthService.requireAuthForPurchase();
+                return false;
+            }
+        }
+    });
+
+    // Header scroll effect
+    window.addEventListener("scroll", function() {
+        const header = document.querySelector(".header-main");
+        if (header) {
+            if (window.scrollY > 0) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
+            }
+        }
+    });
+});
+
+// Modify your existing addToCart function to include auth check
+function addToCart(product) {
+    if (!AuthService.isLoggedIn()) {
+        AuthService.requireAuthForPurchase();
+        return;
+    }
+    
+    // Your existing add to cart logic here
+    const existingItem = cart.find(item => item.id === product.id);
+
+    if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 1) + 1;
+    } else {
+        const productCopy = { ...product };
+        productCopy.quantity = 1;
+        cart.push(productCopy);
+    }
+
+    updateCartCount();
+}
+
+
+// Update navigation on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Update navigation based on auth status
+    if (typeof AuthService !== 'undefined') {
+        AuthService.updateNavigation();
+    }
+    
+    // Protect add to cart functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-btn')) {
+            if (!AuthService.isLoggedIn()) {
+                e.preventDefault();
+                AuthService.requireAuthForPurchase();
+                return false;
+            }
+        }
+    });
+
+    // Header scroll effect
+    window.addEventListener("scroll", function() {
+        const header = document.querySelector(".header-main");
+        if (header) {
+            if (window.scrollY > 0) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
+            }
+        }
+    });
+});
+
+
+
+
 // script.js - Mobile Menu Controller
 document.addEventListener("DOMContentLoaded", () => {
   const checkbox = document.getElementById('menu-toggle');
@@ -563,6 +649,8 @@ function postProd(itemPrice, itemId) {
     })
     .catch((error) => console.error("Error:", error));
 }
+
+ 
 
 
 
